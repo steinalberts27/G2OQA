@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor Display</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <style>
+        body {
+            text-align: center;
+            background-color: #f2f2f2;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #monitor-display {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+
+        #monitor-queue {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="monitor-display">
+        <h1>Monitor Display</h1>
+        <h4>Please proceed to Window 1</h4>
+        <div id="monitor-queue"></div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        initMonitorPage();
+
+        // Update the displayQueuingListForMonitor function
+        function displayQueuingListForMonitor() {
+            const monitorQueueElement = document.getElementById('monitor-queue');
+            monitorQueueElement.innerHTML = ''; // Clear the existing display
+
+            // Retrieve the queuing list from localStorage
+            const queuingList = JSON.parse(localStorage.getItem('queuingList')) || [];
+
+            if (queuingList.length > 0) {
+                const currentQueuingNumber = queuingList[0].queuingNumber;
+                const displayItem = document.createElement('div');
+                displayItem.textContent = `Current Queuing Number: ${currentQueuingNumber}`;
+                monitorQueueElement.appendChild(displayItem);
+            }
+        }
+    </script>
+
+</body>
+</html>

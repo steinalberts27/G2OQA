@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PEGAFI Online Queuing System</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fd3939;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1{
+            color: #ffffff;
+            margin-top: 0;
+            
+        }
+
+            form {
+            background-color: transparent; 
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(255, 249, 249, 0.1);
+            max-width: 400px;
+            margin: 20px auto;
+            border: 2px solid white; 
+            z-index: 1;
+            color: #f0f0f0;
+            
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px; 
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+            border: 1px solid #fdfdfd;
+            border-radius: 4px;
+            z-index: 1;
+        }
+
+        button {
+            background-color: transparent;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #1d1c1a;
+        }
+
+        #result {
+            font-size: 18px;
+            font-weight: bold;
+            color: #f0f0f0;
+           
+        }
+
+        #queue-container {
+            margin-top: 20px;
+            
+        }
+
+        @media (max-width: 767px) {
+            
+            body {
+        display: flex;
+        align-items: center;
+        justify-content: center; 
+        flex-direction: column;
+        padding: 20px;
+    }
+
+            h1 {
+                order: 1;
+                z-index: 1;
+               
+            }
+            
+            form {
+                order: 2;
+                margin-top: 20px;
+                z-index: 1;
+            
+            }
+            .circular-background {
+            position: absolute;
+            top: 5;
+            right: -100px;
+            height: 150%;
+            width: 150%;
+            background-color: #000;
+            border-radius: 50%;
+            transform: translateX(50%);
+            z-index :0;
+        }
+        }
+
+        @media (min-width: 768px) {
+    
+            body {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                padding: 20px;
+            }
+
+            h1 {
+                order: 1;
+                margin-top: 10%;
+                margin-right: auto;
+                z-index: 1;
+            }
+
+            form{
+                order: 2;
+                margin-top: 10%;
+            }
+            p{
+            background-color: transparent; 
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: 20px auto;
+            border: 2px solid white; 
+            z-index: 1;
+            }
+
+            .circular-background {
+            position: fixed;
+            top: 5;
+            right: -100px;
+            height: 180%;
+            width: 120%;
+            background-color: #000;
+            border-radius: 50%;
+            transform: translateX(50%);
+            z-index: 0;
+        }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="circular-background"></div>
+
+    <h1>
+        <img src="https://scontent.xx.fbcdn.net/v/t1.15752-9/418335668_1388759421759331_1071236344733537991_n.png?stp=dst-png_p403x403&_nc_cat=109&ccb=1-7&_nc_sid=510075&_nc_ohc=fwfi69B0-mgAX-6RBRJ&_nc_ad=z-m&_nc_cid=0&_nc_ht=scontent.xx&cb_e2o_trans=q&oh=03_AdQMfDKTwkK9daC8Iq1L7Igbtgsh4a1SIo7-tQGneXNh0g&oe=65C754CF" alt="PEGAFI ONLINE QUEUING SYSTEM">
+    </h1>
+    
+
+    <form id="queuingForm">
+        <label for="file">Choose a file:</label>
+        <select id="file" name="file" required>
+            <option value="" disabled selected>Select a file</option>
+            <option value="Good Moral">Good Moral</option>
+            <option value="Grade Slip">Grade Slip</option>
+            <option value="Certificate of Enrollment">Certificate of Enrollment</option>
+            <option value="Form 137">Form 137</option>
+        </select>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required placeholder="Enter your name">
+
+        <label for="gradeSection">Grade/Section:</label>
+        <input type="text" id="gradeSection" name="gradeSection" required placeholder="Enter your grade and section">
+
+        <label for="strand">Strand:</label>
+        <select id="strand" name="strand" required>
+            <option value="" disabled selected>Select a strand</option>
+            <option value="HUMSS">HUMSS</option>
+            <option value="STEM">STEM</option>
+            <option value="TVL-HE">TVL-HE</option>
+            <option value="TVL-ICT">TVL-ICT</option>
+        </select>
+
+        <button type="button" onclick="enqueueStudent()">Get Queuing Number</button>
+   
+
+    <p id="result"></p>
+ </form>
+    <div id="queue-container">
+        <ul id="queue-list"></ul>
+    </div>
+
+    <script>
+        function enqueueStudent() {
+            const name = document.getElementById('name').value;
+            const gradeSection = document.getElementById('gradeSection').value;
+            const strand = document.getElementById('strand').value;
+
+            const student = {
+                name,
+                gradeSection,
+                strand
+            };
+
+            // Store student information in localStorage (simulate server-side storage)
+            const queuingList = JSON.parse(localStorage.getItem('queuingList')) || [];
+            const queuingNumber = queuingList.length + 1;
+            student.queuingNumber = queuingNumber;
+            queuingList.push(student);
+            localStorage.setItem('queuingList', JSON.stringify(queuingList));
+
+            displayQueuedStudent(student);
+        }
+
+        function displayQueuedStudent(student) {
+            const resultElement = document.getElementById('result');
+            const queueList = document.getElementById('queue-list');
+
+            resultElement.innerHTML = `Your Queuing Number: ${student.queuingNumber}`;
+        }
+    </script>
+
+</body>
+</html>
